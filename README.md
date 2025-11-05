@@ -1,5 +1,6 @@
 <h1 align="center">
   <br>
+    DO NOT USE !!! USE OFFICIAL VERSION!!!
   <a href="#"><img src="https://github.com/millix/millix-wallet/blob/master/app/icon.png?raw=true" alt="millix node" width="200"></a>
   <br>
   millix node <small>v1.25.4</small>
