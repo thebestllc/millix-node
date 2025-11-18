@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Making Transactions in Millix</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        h3 {
+            color: #2c3e50;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        h4 {
+            color: #7f8c8d;
+            margin-top: 20px;
+            margin-bottom: 10px;
+        }
+        code {
+            background: #f4f4f4;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+        pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+        .endpoint {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        .endpoint-id {
+            background: #e74c3c;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-family: monospace;
+            display: inline-block;
+            margin: 5px 0;
+        }
+        .method {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            font-size: 0.85em;
+            margin-left: 10px;
+        }
+        .method.GET {
+            background: #27ae60;
+            color: white;
+        }
+        .method.POST {
+            background: #e67e22;
+            color: white;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background: #3498db;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .toc {
+            background: #ecf0f1;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .toc ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+        .toc li {
+            margin: 5px 0;
+        }
+        .toc a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        .note {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .warning {
+            background: #f8d7da;
+            border-left: 4px solid #dc3545;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .success {
+            background: #d4edda;
+            border-left: 4px solid #28a745;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        .flow-diagram {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 5px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .flow-step {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .arrow {
+            display: inline-block;
+            margin: 0 10px;
+            color: #7f8c8d;
+            font-size: 1.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Making Transactions in Millix</h1>
+        
+        <p>This guide explains how to create and submit transactions in the Millix network. There are two approaches: <strong>high-level</strong> (wallet-based) and <strong>low-level</strong> (manual unspent selection and signing). Both methods are covered in detail below.</p>
+
+        <div class="toc">
+            <h3>Table of Contents</h3>
+            <ul>
+                <li><a href="#overview">1. Overview</a></li>
+                <li><a href="#high-level">2. High-Level Transaction (Wallet-Based)</a></li>
+                <li><a href="#low-level">3. Low-Level Transaction (Manual Unspent Selection)</a></li>
+                <li><a href="#components">4. Transaction Components</a></li>
+                <li><a href="#issues">5. Common Issues and Solutions</a></li>
+            </ul>
+        </div>
+
+        <h2 id="overview">Overview</h2>
+        <p>A transaction in Millix transfers funds from one or more addresses to one or more recipient addresses. Each transaction requires:</p>
+        <ul>
+            <li><strong>Inputs</strong>: Unspent transaction outputs (UTXOs) that fund the transaction</li>
+            <li><strong>Outputs</strong>: Recipient addresses and amounts</li>
+            <li><strong>Fee</strong>: Transaction fee paid to the network</li>
+            <li><strong>Signatures</strong>: Cryptographic proof of ownership of the input addresses</li>
+        </ul>
+
+        <h3>Transaction Flow</h3>
+        <div class="flow-diagram">
+            <div class="flow-step">Select Unspents</div>
+            <span class="arrow">→</span>
+            <div class="flow-step">Build Payload</div>
+            <span class="arrow">→</span>
+            <div class="flow-step">Sign Transaction</div>
+            <span class="arrow">→</span>
+            <div class="flow-step">Submit to Node</div>
+        </div>
+
+        <h2 id="high-level">High-Level Transaction (Wallet-Based)</h2>
+        <p>The high-level approach is the simplest method. The wallet automatically handles unspent selection, transaction building, and signing. You only need to specify recipients and amounts.</p>
+
+        <div class="endpoint">
+            <h3>API Endpoint</h3>
+            <p><strong>Endpoint ID</strong>: <span class="endpoint-id">XPzc85T3reYmGro1</span></p>
+            <p><strong>Name</strong>: <code>send_transaction_from_wallet</code></p>
+            <p><strong>Method</strong>: <span class="method GET">GET</span> / <span class="method POST">POST</span></p>
+            <p><strong>Requires Identity</strong>: Yes</p>
+            <p><strong>Private</strong>: Yes</p>
+        </div>
+
+        <h3>Request Format</h3>
+        <p>The API requires a single parameter <code>p0</code> containing a JSON object with:</p>
+        <ul>
+            <li><code>transaction_output_list</code>: Array of recipient addresses and amounts</li>
+            <li><code>transaction_output_fee</code>: Transaction fee object</li>
+        </ul>
+
+        <h3>Example Request</h3>
+        <pre><code>curl -k "https://localhost:5500/api/{node_id}/{node_signature}/XPzc85T3reYmGro1?p0={\"transaction_output_list\":[{\"address_base\":\"1FXx25vVgHCmvLiwTLNGPvWavdDmCevnTp\",\"address_version\":\"0a0\",\"address_key_identifier\":\"1FmrUhZ9CdaJwcLq22AVdrYd6AFDGAurTm\",\"amount\":400000}],\"transaction_output_fee\":{\"amount\":1000}}"</code></pre>
+
+        <h3>Request Structure</h3>
+        <pre><code>{
+  "transaction_output_list": [
+    {
+      "address_base": "1FXx25vVgHCmvLiwTLNGPvWavdDmCevnTp",
+      "address_version": "0a0",
+      "address_key_identifier": "1FmrUhZ9CdaJwcLq22AVdrYd6AFDGAurTm",
+      "amount": 400000
+    }
+  ],
+  "transaction_output_fee": {
+    "amount": 1000
+  }
+}</code></pre>
+
+        <h3>Response</h3>
+        <p>On success, the API returns:</p>
+        <pre><code>{
+  "api_status": "success",
+  "transaction": {
+    "transaction_id": "2qHnhmBDDt6diYqcTG4FnM9bNkQvbUeGU2gXey5QSNpMN3Rk2T",
+    "shard_id": "qGuUgMMVmaCvqrvoWG6zARjkrujGMpzJmpNhBgz1y3RjBG7ZR",
+    "transaction_date": 1692620135,
+    "node_id_origin": "1PMhekJAHqt7VAEY5GuWAWjRdWYac3uEX4",
+    "node_id_proxy": "1Gc2V1pCaANgUQyArw4DDCrCZ4Ft6iPbZh",
+    "version": "0a20",
+    "payload_hash": "BMAJAY8xUzXRkHSse9qM7nttVVJr59gxZua91aXgwWg7jmhc4",
+    "is_stable": 0,
+    "status": 1
+  }
+}</code></pre>
+
+        <div class="success">
+            <strong>Advantages:</strong>
+            <ul>
+                <li><strong>Simple</strong>: No need to manage unspents or private keys</li>
+                <li><strong>Automatic</strong>: Wallet handles all transaction details</li>
+                <li><strong>Safe</strong>: Reduces risk of errors in transaction construction</li>
+            </ul>
+        </div>
+
+        <h2 id="low-level">Low-Level Transaction (Manual Unspent Selection)</h2>
+        <p>The low-level approach gives you full control over transaction construction. You manually select unspents, build the transaction payload, sign it, and submit it.</p>
+
+        <h3>Step 1: List Available Unspents</h3>
+        <p>First, you need to find unspent transaction outputs (UTXOs) that can fund your transaction.</p>
+
+        <div class="endpoint">
+            <p><strong>API Endpoint</strong>: <span class="endpoint-id">FDLyQ5uo5t7jltiQ</span> (<code>list_transaction_output</code>)</p>
+            <p><strong>Method</strong>: <span class="method GET">GET</span></p>
+            <p><strong>Requires Identity</strong>: Yes</p>
+        </div>
+
+        <h4>Request Parameters</h4>
+        <table>
+            <tr>
+                <th>Parameter</th>
+                <th>Description</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td><code>p3</code></td>
+                <td>address_key_identifier</td>
+                <td>The address to query for unspents</td>
+            </tr>
+            <tr>
+                <td><code>p4</code></td>
+                <td>is_double_spend</td>
+                <td>Must be <code>0</code> (not double-spent)</td>
+            </tr>
+            <tr>
+                <td><code>p7</code></td>
+                <td>is_stable</td>
+                <td>Must be <code>1</code> (transaction is stable)</td>
+            </tr>
+            <tr>
+                <td><code>p10</code></td>
+                <td>is_spent</td>
+                <td>Must be <code>0</code> (output not yet spent)</td>
+            </tr>
+            <tr>
+                <td><code>p13</code></td>
+                <td>order_by</td>
+                <td>Ordering (e.g., <code>"amount desc"</code> for largest first)</td>
+            </tr>
+            <tr>
+                <td><code>p14</code></td>
+                <td>record limit</td>
+                <td>Maximum number of results (default: 1000)</td>
+            </tr>
+        </table>
+
+        <h3>Step 2: Get Private Keys and Public Keys</h3>
+        <p>To sign the transaction, you need the private keys for the addresses that own the unspents.</p>
+
+        <div class="endpoint">
+            <p><strong>API Endpoint</strong>: <span class="endpoint-id">PKUv2JfV87KpEZwE</span> (<code>get_address_private_key</code>)</p>
+            <p><strong>Method</strong>: <span class="method GET">GET</span></p>
+            <p><strong>Requires Identity</strong>: Yes</p>
+            <p><strong>Private</strong>: Yes</p>
+        </div>
+
+        <h3>Step 3: Build Transaction Payload</h3>
+        <p>Construct the unsigned transaction payload with inputs, outputs, and fee.</p>
+
+        <div class="note">
+            <strong>Important Notes:</strong>
+            <ul>
+                <li>The sum of input amounts must equal the sum of output amounts plus the fee</li>
+                <li>If inputs exceed outputs + fee, you can create a change output back to your address</li>
+                <li>All inputs must be stable (<code>is_stable: 1</code>) and unspent (<code>is_spent: 0</code>)</li>
+            </ul>
+        </div>
+
+        <h3>Step 4: Sign Transaction</h3>
+        <div class="endpoint">
+            <p><strong>API Endpoint</strong>: <span class="endpoint-id">RVBqKlGdk9aEhi5J</span> (<code>sign_transaction</code>)</p>
+            <p><strong>Method</strong>: <span class="method GET">GET</span> / <span class="method POST">POST</span></p>
+            <p><strong>Requires Identity</strong>: Yes</p>
+            <p><strong>Private</strong>: Yes</p>
+        </div>
+
+        <h3>Step 5: Send Transaction</h3>
+        <div class="endpoint">
+            <p><strong>API Endpoint</strong>: <span class="endpoint-id">VnJIBrrM0KY3uQ9X</span> (<code>send_transaction</code>)</p>
+            <p><strong>Method</strong>: <span class="method GET">GET</span> / <span class="method POST">POST</span></p>
+            <p><strong>Requires Identity</strong>: Yes</p>
+            <p><strong>Private</strong>: Yes</p>
+        </div>
+
+        <h2 id="components">Transaction Components</h2>
+        <p>Understanding the structure of transaction components is essential for building low-level transactions.</p>
+
+        <h3>Transaction Input List</h3>
+        <p>Each input references an unspent output from a previous transaction.</p>
+
+        <h3>Transaction Output List</h3>
+        <p>Each output specifies a recipient address and amount.</p>
+
+        <h3>Transaction Fee</h3>
+        <p>The fee is paid to the network for processing the transaction.</p>
+
+        <h3>Transaction Signature List</h3>
+        <p>Signatures prove ownership of the input addresses.</p>
+
+        <h2 id="issues">Common Issues and Solutions</h2>
+
+        <div class="warning">
+            <h3>Insufficient Balance</h3>
+            <p><strong>Error</strong>: <code>"error": "insufficient_balance"</code></p>
+            <p><strong>Solution</strong>: Select more unspents, reduce the amount, or check that unspents are stable.</p>
+        </div>
+
+        <div class="warning">
+            <h3>Transaction Output Not Found</h3>
+            <p><strong>Error</strong>: <code>"transaction_output_not_found"</code></p>
+            <p><strong>Solution</strong>: Re-query for unspents before building the transaction.</p>
+        </div>
+
+        <div class="warning">
+            <h3>Unstable Transaction Outputs</h3>
+            <p><strong>Error</strong>: <code>"unexpected generic api error"</code> or transaction signing fails</p>
+            <p><strong>Cause</strong>: Attempting to spend outputs from a transaction that hasn't stabilized yet (<code>is_stable: 0</code>).</p>
+            <p><strong>Solution</strong>: Wait for the transaction to stabilize. Only use outputs where <code>is_stable: 1</code> and <code>is_spent: 0</code>.</p>
+        </div>
+
+        <div class="warning">
+            <h3>Invalid Amount</h3>
+            <p><strong>Error</strong>: <code>"invalid_amount: allocated (X), spend (Y)"</code></p>
+            <p><strong>Solution</strong>: Verify input amounts match output amounts + fee exactly.</p>
+        </div>
+
+        <h2>Additional Resources</h2>
+        <p>For more detailed information, refer to:</p>
+        <ul>
+            <li><a href="API-Reference.html">Millix API Reference</a></li>
+            <li><a href="../millix%20scroll.md">Millix Scrolls documentation</a></li>
+        </ul>
+
+        <h2>Summary</h2>
+        <ul>
+            <li><strong>High-level transactions</strong> are simpler and recommended for most use cases</li>
+            <li><strong>Low-level transactions</strong> provide full control but require more steps</li>
+            <li>Always ensure unspents are stable (<code>is_stable: 1</code>) and unspent (<code>is_spent: 0</code>) before using them</li>
+            <li>Verify input amounts match output amounts plus fees</li>
+            <li>Handle errors gracefully and retry with fresh unspent data if needed</li>
+            <li><strong>Important</strong>: Transaction outputs must stabilize before they can be spent - this is a network consensus requirement</li>
+        </ul>
+
+        <h2>Test Results</h2>
+        
+        <h3>Latest Test Run (300,000 millix)</h3>
+        <p>A test run of the low-level transaction script demonstrated the complete process:</p>
+        <ul>
+            <li>✓ Wallet session retrieved</li>
+            <li>✓ <strong>Stable</strong> unspent outputs found (399000 millix)</li>
+            <li>✓ Private and public keys retrieved using <code>get_keychain_address</code> API</li>
+            <li>✓ Transaction payload built successfully (1 input, 2 outputs)</li>
+            <li>✗ Transaction signing failed with API error (error serialization issue)</li>
+        </ul>
+        <div class="note">
+            <strong>Key Finding</strong>: The script now correctly filters for stable unspents only. All transaction components are correctly structured. The signing step encounters an API error that requires investigation (check server logs for detailed error message).
+        </div>
+        
+        <h3>Previous Test Run (400,000 millix)</h3>
+        <ul>
+            <li>✓ Wallet session retrieved</li>
+            <li>✓ Unspent outputs found (602000 millix)</li>
+            <li>✓ Private and public keys retrieved</li>
+            <li>✓ Transaction payload built successfully</li>
+            <li>✗ Transaction signing failed - output was unstable (<code>is_stable: 0</code>)</li>
+        </ul>
+        <div class="note">
+            <strong>Key Finding</strong>: Outputs must have <code>is_stable: 1</code> before they can be spent. The script now enforces this requirement.
+        </div>
+    </div>
+</body>
+</html>
+

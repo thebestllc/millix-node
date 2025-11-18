@@ -1,0 +1,8 @@
+additional address for transactions and looking up: 1FXx25vVgHCmvLiwTLNGPvWavdDmCevnTp0a01FmrUhZ9CdaJwcLq22AVdrYd6AFDGAurTm
+
+Old transaction_id for lookup and use: 2qHnhmBDDt6diYqcTG4FnM9bNkQvbUeGU2gXey5QSNpMN3Rk2T
+
+You can use the above transaction ID to get the unspents to use in creating a transaction.
+
+
+

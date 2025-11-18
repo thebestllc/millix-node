@@ -1,0 +1,48 @@
+{
+  "timestamp": "2025-11-18T09:08:24.265Z",
+  "config": {
+    "host": "localhost",
+    "port": 5500,
+    "amount": 300000,
+    "fee": 1000,
+    "recipientAddress": "1FXx25vVgHCmvLiwTLNGPvWavdDmCevnTp0a01FmrUhZ9CdaJwcLq22AVdrYd6AFDGAurTm"
+  },
+  "lowLevel": {
+    "method": "low-level",
+    "timestamp": "2025-11-18T09:08:24.268Z",
+    "amount": 300000,
+    "fee": 1000,
+    "steps": {
+      "session": {
+        "success": true,
+        "address": "1EUqsweaxVd7yvUgwwAi9GpwMwaG8WuZ54"
+      },
+      "unspents": {
+        "success": true,
+        "count": 1,
+        "total": 399000
+      },
+      "keys": {
+        "success": true,
+        "count": 1,
+        "privateKeys": 1,
+        "publicKeys": 1
+      },
+      "payload": {
+        "success": true,
+        "inputs": 1,
+        "outputs": 2
+      }
+    },
+    "success": false,
+    "error": "Signing failed: unexpected generic api error: ([object Object])",
+    "duration": 66
+  },
+  "errors": [
+    {
+      "method": "low-level",
+      "error": "Signing failed: unexpected generic api error: ([object Object])",
+      "timestamp": "2025-11-18T09:08:24.334Z"
+    }
+  ]
+}

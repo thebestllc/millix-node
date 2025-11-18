@@ -1,0 +1,45 @@
+running millix node
+npm error could not determine executable to run
+npm error A complete log of this run can be found in: /home/millixdev/.npm/_logs/2025-11-17T14_19_50_233Z-debug-0.log
+running millix node
+[31m2025-11-17 19:50:16:5016 undefined error: uncaughtException: listen EADDRINUSE: address already in use 0.0.0.0:5500[39m
+[31mError: listen EADDRINUSE: address already in use 0.0.0.0:5500[39m
+[31m    at Server.setupListenHandle [as _listen2] (node:net:1940:16)[39m
+[31m    at listenInCluster (node:net:1997:12)[39m
+[31m    at node:net:2206:7[39m
+[31m    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)[39m
+enter the passphrase to unlock this wallet: [31m2025-11-17 19:50:16:5016 undefined error: uncaughtException: bind EADDRINUSE 0.0.0.0:2000[39m
+[31mError: bind EADDRINUSE 0.0.0.0:2000[39m
+[31m    at node:dgram:399:20[39m
+[31m    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)[39m
+(node:1340728) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[31m2025-11-17 19:50:16:5016 undefined error: uncaughtException: listen EADDRINUSE: address already in use 0.0.0.0:8001[39m
+[31mError: listen EADDRINUSE: address already in use 0.0.0.0:8001[39m
+[31m    at Server.setupListenHandle [as _listen2] (node:net:1940:16)[39m
+[31m    at listenInCluster (node:net:1997:12)[39m
+[31m    at node:net:2206:7[39m
+[31m    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)[39m
+running millix node
+[31m2025-11-17 20:52:24:5224 undefined error: uncaughtException: listen EADDRINUSE: address already in use 0.0.0.0:5500[39m
+[31mError: listen EADDRINUSE: address already in use 0.0.0.0:5500[39m
+[31m    at Server.setupListenHandle [as _listen2] (node:net:1940:16)[39m
+[31m    at listenInCluster (node:net:1997:12)[39m
+[31m    at node:net:2206:7[39m
+[31m    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)[39m
+enter the passphrase to unlock this wallet: [31m2025-11-17 20:52:24:5224 undefined error: uncaughtException: bind EADDRINUSE 0.0.0.0:2000[39m
+[31mError: bind EADDRINUSE 0.0.0.0:2000[39m
+[31m    at node:dgram:399:20[39m
+[31m    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)[39m
+(node:1355863) [DEP0123] DeprecationWarning: Setting the TLS ServerName to an IP address is not permitted by RFC 6066. This will be ignored in a future version.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+[31m2025-11-17 20:52:25:5225 undefined error: uncaughtException: listen EADDRINUSE: address already in use 0.0.0.0:8001[39m
+[31mError: listen EADDRINUSE: address already in use 0.0.0.0:8001[39m
+[31m    at Server.setupListenHandle [as _listen2] (node:net:1940:16)[39m
+[31m    at listenInCluster (node:net:1997:12)[39m
+[31m    at node:net:2206:7[39m
+[31m    at process.processTicksAndRejections (node:internal/process/task_queues:89:21)[39m
+[31m2025-11-18 09:41:26:4126 undefined error: uncaughtException: bind EADDRINUSE 0.0.0.0:2000[39m
+[31mError: bind EADDRINUSE 0.0.0.0:2000[39m
+[31m    at node:dgram:399:20[39m
+[31m    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)[39m
