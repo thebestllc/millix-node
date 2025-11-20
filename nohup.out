@@ -55,3 +55,4 @@ enter the passphrase to unlock this wallet: [31m2025-11-17 20:52:24:5224 undefi
 [31mError: bind EADDRINUSE 0.0.0.0:2000[39m
 [31m    at node:dgram:399:20[39m
 [31m    at process.processTicksAndRejections (node:internal/process/task_queues:90:21)[39m
+worker died
